@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morar no Mundo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="language-selector">
+        <select id="siteLanguage">
+            <option value="pt" selected>Português</option>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+        </select>
+    </div>
+
+    <div class="user-auth" id="userAuth">
+        </div>
+
+    <div class="container">
+        <div class="header">
+            </div>
+        <div class="app-container">
+            <div class="sidebar">
+                </div>
+            <div class="main-content">
+                </div>
+        </div>
+    </div>
+
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i> </div>
+
+    <div class="comparison-sidebar" id="comparisonSidebar">
+        </div>
+
+    <div class="modal" id="countryModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <div class="modal-header">
+                <h2 data-i18n="countryDetailsTitle"><i class="fas fa-info-circle"></i> <span id="modalCountryName"></span></h2>
+                <img id="modalCountryFlag" class="modal-flag" src="" alt="Bandeira">
+                <div class="country-rating rating-high" id="modalCountryRating"></div>
+            </div>
+            
+            <div class="modal-tabs">
+                <div class="modal-tab active" data-tab="details" data-i18n="details">Detalhes</div>
+                <div class="modal-tab" data-tab="universities" data-i18n="universities">Universidades</div>
+                <div class="modal-tab" data-tab="scholarships" data-i18n="scholarships">Bolsas</div>
+            </div>
+            
+            <div class="modal-tab-content active" id="detailsTab">
+                <div class="country-details-grid" id="countryDetailsContent">
+                    </div>
+                <div class="currency-converter">
+                    <h3 data-i18n="currencyConverterTitle">Conversor de Moedas</h3>
+                    <div class="currency-selector">
+                        <input type="number" id="amountFrom" value="1" min="0">
+                        <select id="currencyFrom"></select>
+                        <span data-i18n="to">para</span>
+                        <select id="currencyTo"></select>
+                    </div>
+                    <div id="currencyResult" class="currency-result"></div>
+                </div>
+            </div>
+            
+            <div class="modal-tab-content" id="universitiesTab">
+                <div id="universitiesContent">
+                    </div>
+            </div>
+            
+            <div class="modal-tab-content" id="scholarshipsTab">
+                <div id="scholarshipsContent">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="comparisonModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeComparisonModalBtn">&times;</span>
+            <div class="modal-header">
+                <h2 data-i18n="compareCountries">Comparar Países</h2>
+            </div>
+            <div id="comparisonTableContainer">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th id="compareCountry1Name">País 1</th>
+                            <th id="compareCountry2Name">País 2</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comparisonTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <span class="close-btn" id="closeAuthModalBtn">&times;</span>
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login" data-i18n="login">Entrar</div>
+                <div class="auth-tab" data-tab="register" data-i18n="register">Cadastrar</div>
+            </div>
+            
+            <div id="loginForm" class="auth-tab-content active">
+                <form class="auth-form">
+                    <input type="email" id="loginEmail" data-i18n-placeholder="emailPlaceholder" placeholder="Email" required>
+                    <input type="password" id="loginPassword" data-i18n-placeholder="passwordPlaceholder" placeholder="Senha" required>
+                    <p class="auth-error" id="loginError"></p>
+                    <button type="submit" id="loginSubmitBtn" data-i18n="login">Entrar</button>
+                </form>
+            </div>
+            
+            <div id="registerForm" class="auth-tab-content">
+                <form class="auth-form">
+                    <input type="text" id="registerName" data-i18n-placeholder="namePlaceholder" placeholder="Nome" required>
+                    <input type="email" id="registerEmail" data-i18n-placeholder="emailPlaceholder" placeholder="Email" required>
+                    <input type="password" id="registerPassword" data-i18n-placeholder="passwordPlaceholder" placeholder="Senha" required>
+                    <p class="auth-error" id="registerError"></p>
+                    <button type="submit" id="registerSubmitBtn" data-i18n="register">Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="notifications-modal" id="notificationsModal">
+        <div class="notifications-header">
+            <h3 data-i18n="notificationsTitle">Notificações</h3>
+            <span class="close-btn" id="closeNotificationsModalBtn">&times;</span>
+        </div>
+        <ul class="notifications-list" id="notificationsList">
+            </ul>
+        <div class="notification-actions">
+            <button class="auth-btn secondary" id="markAllReadBtn" data-i18n="markAllRead">Marcar todas como lidas</button>
+            <button class="auth-btn" id="viewNotificationSettingsBtn" data-i18n="settings">Configurações</button>
+        </div>
+        <div class="notification-settings" id="notificationSettings" style="display:none;">
+            <h4 data-i18n="notificationSettingsTitle">Configurações de Notificação</h4>
+            <div class="settings-item">
+                <label for="allowNotifications" data-i18n="allowPushNotifications">Permitir notificações push</label>
+                <label class="switch">
+                    <input type="checkbox" id="allowNotifications">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <label for="emailNotifications" data-i18n="emailNotifications">Notificações por Email</label>
+                <label class="switch">
+                    <input type="checkbox" id="emailNotifications">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20n6qqzjrBge4qvsby6+gAzhYw/TRM+L+GwISxKk/zWw="
+            crossorigin=""></script>
+    <script src="script.js"></script>
+</body>
+</html>
